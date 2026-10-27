@@ -4,7 +4,7 @@ Projeto desenvolvido para a disciplina **SSC0118 - Sistemas Digitais** do Instit
 
 ---
 
-## 📌 Visão Geral
+## Visão Geral
 
 O projeto consiste no projeto e implementação de uma **Micro CPU** capaz de ler instruções e dados codificados em formato binário armazenados em memória (ROM) e executá-los sequencialmente ou via desvios de fluxo. 
 
@@ -12,7 +12,7 @@ A arquitetura conta com exibição em tempo real do estado dos registradores atr
 
 ---
 
-## 📐 Especificações Arquiteturais
+## Especificações Arquiteturais
 
 * **Tamanho da Palavra de Memória:** 16 bits (dividida entre opcode da instrução e operandos/dados).
 * **Largura dos Registradores:** 4 bits (Registradores positivos/unsigned).
@@ -22,7 +22,7 @@ A arquitetura conta com exibição em tempo real do estado dos registradores atr
 
 ---
 
-## 🏗️ Estrutura do Processador
+## Estrutura do Processador
 
 O sistema é composto pelos seguintes blocos principais:
 
@@ -35,7 +35,7 @@ O sistema é composto pelos seguintes blocos principais:
 
 ---
 
-## 📜 Conjunto de Instruções (ISA)
+## Conjunto de Instruções (ISA)
 
 ### Instruções Básicas
 
@@ -59,7 +59,7 @@ O sistema é composto pelos seguintes blocos principais:
 
 ---
 
-## 🛠️ Configuração da Memória (`LPM_ROM`)
+## Configuração da Memória (`LPM_ROM`)
 
 Para o correto funcionamento da memória no Quartus:
 1. Adicione o componente `LPM_ROM`.
@@ -68,7 +68,7 @@ Para o correto funcionamento da memória no Quartus:
 
 ---
 
-## 🚀 Como Executar o Projeto
+## Como Executar o Projeto
 
 1. Abra o arquivo de projeto `.qpf` no **Intel / Altera Quartus Prime**.
 2. Certifique-se de que o arquivo `.mif` com o programa em código de máquina está configurado no módulo `LPM_ROM`.
@@ -77,7 +77,7 @@ Para o correto funcionamento da memória no Quartus:
 
 ---
 
-## 👨‍💻 Autores e Créditos
+## Autores e Créditos
 
 * **Disciplina:** SSC0118 - Sistemas Digitais
 * **Docente:** Prof. Denis F. Wolf
