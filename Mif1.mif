@@ -1,0 +1,59 @@
+-- ====================================================================
+-- Arquivo de Inicializacao de Memoria (ROM) - MicroCPU 16-bits
+-- Disciplina: Sistemas Digitais / SSC0118
+
+-- Layout da Palavra (16 bits):
+--   Bits [15..12] : Opcode (0:MOV, 1:ADD, 2:SUB, 3:MUL, 4:DIV, 5:CMP, 6:JE, 7:JZ, 8:JMP)
+--   Bit  [11]     : Write Enable (1 = Escreve no Registrador Destino)
+--   Bit  [10]     : Bit de Validacao de JMP (1 = Ativa Salto Incondicional)
+--   Bits [9..8]   : Registrador Destino (01:RA, 10:RB, 11:RC, 00:Nenhum)
+--   Bits [7..6]   : Operando A / OpA (00/01:RA, 10:RB, 11:RC)
+--   Bits [5..4]   : Operando B / OpB (00:RA, 01:RB, 10:RC, 11:Valor Imediato)
+--   Bits [3..0]   : Valor Imediato (4 bits) / Endereco de Salto (Bits [5..0] em saltos)
+-- ====================================================================
+
+WIDTH = 16;
+DEPTH = 64;
+
+ADDRESS_RADIX = HEX;
+DATA_RADIX = HEX;
+
+CONTENT BEGIN
+-- 1. INICIALIZACAO DE REGISTRADORES COM VALORES IMEDIATOS
+00 : 0935; -- MOV 5, RA        -> RA = 5  (Opcode:0, WE:1, Dest:RA, OpB:Imm, Imm:5)
+01 : 0A33; -- MOV 3, RB        -> RB = 3  (Opcode:0, WE:1, Dest:RB, OpB:Imm, Imm:3)
+02 : 0B30; -- MOV 0, RC        -> RC = 0  (Opcode:0, WE:1, Dest:RC, OpB:Imm, Imm:0)
+
+-- 2. OPERACOES ARITMETICAS
+03 : 1B10; -- ADD RA, RB -> RC -> RC = 5 + 3 = 8
+04 : 1BF2; -- ADD RC, 2  -> RC -> RC = 8 + 2 = 10 (0xA)
+05 : 2BD0; -- SUB RC, RB -> RC -> RC = 10 - 3 = 7
+06 : 3AB2; -- MUL RB, 2  -> RB -> RB = 3 * 2 = 6
+07 : 4AB2; -- DIV RB, 2  -> RB -> RB = 6 / 2 = 3
+
+-- 3. MOVIMENTO ENTRE REGISTRADORES
+08 : 0910; -- MOV RB, RA       -> RA = RB = 3
+
+-- 4. TESTE DE COMPARACAO (CMP) E SALTO SE IGUAL (JE)
+09 : 5010; -- CMP RA, RB       -> Compara RA(3) e RB(3). Deve setar flag_eq = 1
+0A : 600C; -- JE 0x0C          -> Se flag_eq == 1, salta para 0x0C (DEVE SALTAR)
+0B : 0B3F; -- MOV 15, RC       -> [FALHA] Executado apenas se JE falhar!
+
+-- 5. TESTE DE SALTO SE ZERO (JZ)
+0C : 0B30; -- MOV 0, RC        -> RC = 0
+0D : 70CF; -- JZ RC, 0x0F      -> Se RC == 0, salta para 0x0F (DEVE SALTAR)
+0E : 0B3E; -- MOV 14, RC       -> [FALHA] Executado apenas se JZ falhar!
+
+-- 6. LOOP INCREMENTAL COM SALTO INCONDICIONAL (JMP)
+0F : 1BF1; -- ADD RC, 1 -> RC  -> Incrementa RC
+10 : 50C0; -- CMP RC, RA       -> Compara RC com RA (3)
+11 : 6013; -- JE 0x13          -> Se RC == RA, sai do loop para 0x13
+12 : 840F; -- JMP 0x0F         -> JMP com Opcode 8 + Bit 10 (0x840F) para 0x0F
+
+-- 7. FIM DO PROGRAMA (SUCESSO)
+13 : 093F; -- MOV 15, RA       -> RA = 15 (Sinaliza no display que o teste passou!)
+14 : 8414; -- JMP 0x14         -> Loop infinito final / Halt (0x8414)
+
+-- Preenche o restante da memoria com instrucoes NOP/Zera
+[15..3F] : 0000;
+END;
